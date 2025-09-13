@@ -18,7 +18,7 @@ def health_check():
     return{"Alive": 200}
 
 @app.post("/")
-async def this_is_a_cat(request: Request):
+async def is_this_a_cat(request: Request):
     data = await request.json()
     img_base64 = data.get("image")
 
