@@ -23,7 +23,7 @@ async def this_is_a_cat(request: Request):
     img_base64 = data.get("image")
 
     if not img_base64:
-        return JSONResponse(content={"error": "Imagem não fornecida"}, status_code=400)
+        return JSONResponse(content={"error": "Image not found"}, status_code=400)
 
     if "," in img_base64:
         img_base64 = img_base64.split(",")[1]
