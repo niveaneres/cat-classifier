@@ -31,6 +31,7 @@ jobs:
           python -m unittest discover -s tests -p "*.py"
 
   Delivery:
+    needs: Integration
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -45,6 +46,7 @@ jobs:
             README.md
   
   Discord:
+    needs: Delivery
     runs-on: ubuntu-latest
     steps:
     - uses: sarisia/actions-status-discord@v1
