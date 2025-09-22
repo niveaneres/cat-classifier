@@ -18,8 +18,8 @@ class TestModelHandler(unittest.TestCase):
     @patch("cv2.dnn.blobFromImage")
     @patch("cv2.resize")
     @patch("src.services.model.transform")
-    def test_inference_cat(self,
-        mock_transform, mock_resize, mock_blob
+    def test_inference_cat(
+        self, mock_transform, mock_resize, mock_blob, mock_readNet, mock_getenv
     ):
         handler = ModelHandler()
         mock_net = MagicMock()
@@ -27,11 +27,12 @@ class TestModelHandler(unittest.TestCase):
         mock_transform.return_value = np.zeros((500, 500, 3), dtype=np.uint8)
         mock_resize.return_value = np.zeros((416, 416, 3), dtype=np.uint8)
         mock_blob.return_value = "blob"
-    
+
         detections = np.zeros((1, 1, 1, 7))
-        detections[0, 0, 0, 2] = 0.9  
-        detections[0, 0, 0, 1] = 8   
+        detections[0, 0, 0, 2] = 0.9  # confidence
+        detections[0, 0, 0, 1] = 8    # class ID for cat
         mock_net.forward.return_value = detections
+
         result = handler.inference(np.zeros((500, 500, 3), dtype=np.uint8))
         assert result == "cat"
 
@@ -40,8 +41,8 @@ class TestModelHandler(unittest.TestCase):
     @patch("cv2.dnn.blobFromImage")
     @patch("cv2.resize")
     @patch("src.services.model.transform")
-    def test_inference_not_cat(self,
-        mock_transform, mock_resize, mock_blob
+    def test_inference_not_cat(
+        self, mock_transform, mock_resize, mock_blob, mock_readNet, mock_getenv
     ):
         handler = ModelHandler()
         mock_net = MagicMock()
@@ -49,14 +50,14 @@ class TestModelHandler(unittest.TestCase):
         mock_transform.return_value = np.zeros((500, 500, 3), dtype=np.uint8)
         mock_resize.return_value = np.zeros((416, 416, 3), dtype=np.uint8)
         mock_blob.return_value = "blob"
-    
+
         detections = np.zeros((1, 1, 1, 7))
-        detections[0, 0, 0, 2] = 0.7  
-        detections[0, 0, 0, 1] = 3    
+        detections[0, 0, 0, 2] = 0.7  # confidence
+        detections[0, 0, 0, 1] = 3    # class ID for not-cat
         mock_net.forward.return_value = detections
+
         result = handler.inference(np.zeros((500, 500, 3), dtype=np.uint8))
         assert result == "it's not a cat"
-
 
 if __name__ == "__main__":
     unittest.main()
